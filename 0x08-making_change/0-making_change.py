@@ -1,16 +1,44 @@
 #!/usr/bin/python3
-'''solves the making change problem'''
+"""
+Making Change
+"""
+import sys
 
 
 def makeChange(coins, total):
-    dp = [total + 1] * (total + 1)
-    dp[0] = 0
+    """
+    Given a total a pile of coins of different totalalues,
+    determine the fewest number of coins needed to meet a
+    gitotalen amount total.
+    """
+    if total <= 0:
+        return 0
+    res = minCoins(coins, len(coins), total)
+    if res == 0:
+        return -1
+    return res
 
-    for a in range(1, total + 1):
-        for coin in coins:
-            if a - coin >= 0:
-                dp[a] = min(dp[a], 1 + dp[a - coin])
 
-    if dp[total] != (total + 1):
-        return dp[total]
-    return -1
+def minCoins(coins, m, total):
+    """
+    find the minimum coins
+    """
+    table = [0 for i in range(total + 1)]
+    table[0] = 0
+
+    for i in range(1, total + 1):
+        table[i] = sys.maxsize
+
+    for i in range(1, total + 1):
+
+        for j in range(m):
+            if (coins[j] <= i):
+                sub_res = table[i - coins[j]]
+                if (sub_res != sys.maxsize and
+                        sub_res + 1 < table[i]):
+                    table[i] = sub_res + 1
+
+    if table[total] == sys.maxsize:
+        return -1
+
+    return table[total]
